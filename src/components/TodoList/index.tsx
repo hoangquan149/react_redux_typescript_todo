@@ -1,20 +1,9 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
 import { FILTERS } from "../../utils/constanst";
-import { Todo } from "../../utils/types";
+import { Todo, PropsTodo } from "../../utils/types";
 import TodoItem from "../TodoItem";
 
 import "./style.scss";
-
-interface PropsTodo {
-   todoList: Array<Todo>;
-   deleteTodo: (index: number) => void;
-   toggleTodo: (event: ChangeEvent<HTMLInputElement>, index: number) => void;
-   toggleAllTodo: (event: ChangeEvent<HTMLInputElement>) => void;
-   editTodo: (index: number) => void;
-   indexEdit: number;
-   updateTodo: (event: KeyboardEvent<HTMLInputElement>, callback: any) => void;
-   filter: any;
-}
 
 function TodoList(props: PropsTodo) {
    const {

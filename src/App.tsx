@@ -10,8 +10,8 @@ import Header from "./components/layouts/Header";
 import TodoList from "./components/TodoList";
 import { Todo } from "./utils/types";
 import { ENTER_KEY, CANCEL_KEY } from "./utils/constanst";
-import "./App.scss";
 import useLocalStorage from "./hooks/useLocalStorage";
+import "./App.scss";
 
 function App() {
    const { save, get } = useLocalStorage();
@@ -25,9 +25,9 @@ function App() {
 
    const inputRef = useRef<HTMLInputElement | null>();
 
-   const [indexEdit, setIndexEdit] = useState<any>();
+   const [indexEdit, setIndexEdit] = useState<number | null | undefined>();
 
-   const [filter, setFilter] = useState<any>("all");
+   const [filter, setFilter] = useState<string>("all");
 
    useEffect(() => {
       save(todoList);
@@ -58,6 +58,7 @@ function App() {
       const newState = [...todoList];
       newState.splice(index, 1);
       setTodoList(newState);
+      setIndexEdit(null);
    };
 
    const toggleTodo = (
@@ -87,6 +88,8 @@ function App() {
       setTodoList(newState);
    };
 
+   console.log(Number(indexEdit));
+
    const updateTodo = (
       event: KeyboardEvent<HTMLInputElement>,
       callback: any
@@ -95,7 +98,7 @@ function App() {
 
       const newState = [...todoList];
 
-      const todo = newState[indexEdit];
+      const todo = newState[Number(indexEdit)];
 
       if (indexEdit !== null) {
          if (value) {
@@ -114,11 +117,9 @@ function App() {
             }
          } else {
             if (event.keyCode === ENTER_KEY) {
-               deleteTodo(indexEdit);
-               setIndexEdit(null);
+               deleteTodo(Number(indexEdit));
             } else if (event.keyCode === CANCEL_KEY) {
-               deleteTodo(indexEdit);
-               setIndexEdit(null);
+               deleteTodo(Number(indexEdit));
             }
          }
       }
