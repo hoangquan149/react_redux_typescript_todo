@@ -1,0 +1,30 @@
+.main {
+   border-top: 1px solid #e6e6e6;
+
+   .toggle-all {
+      display: none;
+   }
+
+   .toggle-all + label {
+      position: absolute;
+      top: 17px;
+      left: 8px;
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+   }
+
+   .toggle-all + label::before {
+      content: "❯";
+      font-size: 22px;
+      color: #e6e6e6;
+      padding: 10px;
+   }
+
+   .toggle-all:checked + label:before {
+      color: #737373;
+   }
+
+   .todo-list li:last-child {
+      border-bottom: none;
+   }
+}

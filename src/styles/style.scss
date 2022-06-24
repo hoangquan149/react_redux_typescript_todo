@@ -1,0 +1,38 @@
+* {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+
+body {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+   background: #f5f5f5;
+   color: #4d4d4d;
+   font-weight: 300;
+   user-select: none;
+}
+
+.app {
+   position: relative;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   width: 500px;
+   margin: 130px auto;
+   background-color: #fff;
+   border-radius: 2px;
+   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+input,
+button,
+[tabindex] {
+   border: none;
+   outline: none;
+}
+
+ul {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+}

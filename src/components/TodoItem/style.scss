@@ -1,0 +1,88 @@
+.todo-list li {
+   width: 100%;
+   position: relative;
+   display: block;
+   font-size: 1.2rem;
+   border-bottom: 1px solid #ededed;
+
+   label {
+      display: block;
+      padding: 15px 15px 15px 60px;
+      font-size: 24px;
+      border: 1px solid transparent;
+   }
+
+   .view .toggle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+
+      margin: auto 0;
+      width: 40px;
+      height: 40px;
+
+      opacity: 0;
+   }
+
+   &.completed label {
+      color: #d9d9d9;
+      text-decoration: line-through;
+   }
+
+   .view .toggle + label {
+      background-image: url("../../assets/icons/icon.svg");
+      background-repeat: no-repeat;
+      background-position: left;
+   }
+
+   .view .toggle:checked + label {
+      background-image: url("../../assets/icons/icon2.svg");
+   }
+
+   &.editing .edit {
+      width: -webkit-fill-available;
+      display: block;
+      border: 1px solid #999;
+      box-shadow: inset 0 -1px 5px 0 rgb(0 0 0 / 20%);
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      padding: 15px 0px 15px 6px;
+      margin: 0 0 0 53px;
+      font-size: 24px;
+   }
+
+   .edit {
+      display: none;
+   }
+
+   &.editing .view {
+      display: none;
+   }
+
+   .destroy {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 10px;
+      bottom: 0;
+      width: 40px;
+      height: 40px;
+      margin: auto 0;
+      font-size: 30px;
+      color: #cc9a9a;
+      background-color: transparent;
+      transition: color 0.2s ease-out;
+
+      &:hover {
+         color: #af5b5e;
+      }
+   }
+
+   &:hover .destroy {
+      display: block;
+   }
+
+   .destroy:after {
+      content: "×";
+   }
+}

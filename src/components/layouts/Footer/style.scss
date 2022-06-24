@@ -1,0 +1,64 @@
+.footer {
+   display: flex;
+   justify-content: space-between;
+   padding: 10px 15px;
+   border-top: 1px solid #e6e6e6;
+   color: #777;
+   font-size: 12px;
+   text-align: center;
+   z-index: 1;
+
+   span {
+      flex: 1;
+      text-align: left;
+   }
+   a .filters {
+      flex: 1;
+   }
+
+   .box-clear {
+      flex: 1;
+      text-align: right;
+   }
+
+   .filters li {
+      display: inline;
+      margin: 3px;
+      padding: 3px 7px;
+      border: 1px solid transparent;
+
+      &:hover {
+         cursor: pointer;
+         border-color: rgba(175, 47, 47, 0.1);
+      }
+   }
+
+   .filters .selected {
+      border-color: rgba(175, 47, 47, 0.2);
+   }
+
+   .clear {
+      background: none;
+      color: currentColor;
+      font-size: 12px;
+      &:hover {
+         cursor: pointer;
+         text-decoration: underline;
+      }
+   }
+
+   &::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 50px;
+      overflow: hidden;
+      z-index: -1;
+
+      box-shadow: 0 1px 1px rgb(0 0 0 / 20%), 0 8px 0 -3px #f6f6f6,
+         0 9px 1px -3px rgb(0 0 0 / 20%), 0 16px 0 -6px #f6f6f6,
+         0 17px 2px -6px rgb(0 0 0 / 20%);
+   }
+}
