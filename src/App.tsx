@@ -4,6 +4,8 @@ import React, {
    useState,
    useEffect,
    useRef,
+   FocusEventHandler,
+   FocusEvent,
 } from "react";
 import Footer from "./components/layouts/Footer";
 import Header from "./components/layouts/Header";
@@ -28,6 +30,8 @@ function App() {
    const [indexEdit, setIndexEdit] = useState<number | null | undefined>();
 
    const [filter, setFilter] = useState<string>("all");
+
+   const [value, setValue] = useState<string>("");
 
    useEffect(() => {
       save(todoList);
@@ -88,14 +92,35 @@ function App() {
       setTodoList(newState);
    };
 
-   console.log(Number(indexEdit));
-
-   const updateTodo = (
-      event: KeyboardEvent<HTMLInputElement>,
-      callback: any
+   const handleValueEdit = (
+      event: { target: HTMLInputElement } | null,
+      callback: Function | null
    ): void => {
-      const value = event.currentTarget.value;
+      const value = event.target.value;
 
+      if (typeof callback === "function") {
+         callback(value);
+         setValue(value);
+      }
+   };
+
+   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+      if (!value) {
+         return;
+      }
+
+      const newState = [...todoList];
+
+      const todo = newState[Number(indexEdit)];
+
+      if (e.type === "blur") {
+         todo.title = value;
+         setTodoList(newState);
+         setIndexEdit(null);
+      }
+   };
+
+   const updateTodo = (event: KeyboardEvent<HTMLInputElement>): void => {
       const newState = [...todoList];
 
       const todo = newState[Number(indexEdit)];
@@ -109,12 +134,6 @@ function App() {
             } else if (event.keyCode === CANCEL_KEY) {
                setIndexEdit(null);
             }
-
-            if (event.type === "blur") {
-               todo.title = value;
-               setTodoList(newState);
-               setIndexEdit(null);
-            }
          } else {
             if (event.keyCode === ENTER_KEY) {
                deleteTodo(Number(indexEdit));
@@ -122,10 +141,6 @@ function App() {
                deleteTodo(Number(indexEdit));
             }
          }
-      }
-
-      if (typeof callback === "function") {
-         callback(value);
       }
    };
 
@@ -150,6 +165,8 @@ function App() {
                editTodo={editTodo}
                indexEdit={indexEdit}
                updateTodo={updateTodo}
+               handleEdit={handleValueEdit}
+               handleBlur={handleBlur}
                filter={filter}
             />
          )}

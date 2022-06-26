@@ -14,6 +14,8 @@ function TodoList(props: PropsTodo) {
       editTodo,
       indexEdit,
       updateTodo,
+      handleEdit,
+      handleBlur,
       filter,
    } = props;
    return (
@@ -38,6 +40,8 @@ function TodoList(props: PropsTodo) {
                      editTodo={editTodo}
                      indexEdit={indexEdit}
                      updateTodo={updateTodo}
+                     handleEdit={handleEdit}
+                     handleBlur={handleBlur}
                   />
                ))}
          </ul>

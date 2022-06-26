@@ -1,6 +1,9 @@
 import { FILTERS } from "../../../utils/constanst";
+import { PropsFooter, Todo } from "../../../utils/types";
+import PropTypes from "prop-types";
 import "./style.scss";
-function Footer(props: any) {
+
+function Footer(props: PropsFooter) {
    const { filter, handleFilter, clearCompleted, todoList } = props;
    return (
       <footer className="footer">
@@ -26,5 +29,12 @@ function Footer(props: any) {
       </footer>
    );
 }
+
+Footer.propTypes = {
+   filter: PropTypes.string.isRequired,
+   handleFilter: PropTypes.func.isRequired,
+   clearCompleted: PropTypes.func.isRequired,
+   todoList: PropTypes.array.isRequired,
+};
 
 export default Footer;

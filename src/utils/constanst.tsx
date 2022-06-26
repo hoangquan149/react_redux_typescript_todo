@@ -1,4 +1,4 @@
-import { Todo, Actions } from "./types";
+import { Todo } from "./types";
 
 export const ENTER_KEY: number = 13;
 export const CANCEL_KEY: number = 27;

@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from "react";
+import React, { FC, ChangeEvent, KeyboardEvent, useState } from "react";
+import { PropsTodo, Todo } from "../../utils/types";
 import "./style.scss";
 
-function TodoItem(props: any) {
+export default function TodoItem(props: PropsTodo) {
    const {
       todo: { title, completed },
       index,
@@ -10,6 +11,8 @@ function TodoItem(props: any) {
       editTodo,
       indexEdit,
       updateTodo,
+      handleEdit,
+      handleBlur,
    } = props;
 
    const [inputValue, setInputValue] = useState<string>(title);
@@ -36,12 +39,10 @@ function TodoItem(props: any) {
          <input
             className="edit"
             value={inputValue}
-            onChange={(event) => updateTodo(event, setInputValue)}
+            onChange={(event) => handleEdit(event, setInputValue)}
             onKeyUp={updateTodo}
-            onBlur={updateTodo}
+            onBlur={handleBlur}
          />
       </li>
    );
 }
-
-export default TodoItem;

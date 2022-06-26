@@ -1,14 +1,8 @@
 import React, { ChangeEvent, KeyboardEvent } from "react";
+import { PropsHeader } from "../../../utils/types";
 import "./style.scss";
 
-interface Props {
-   handleTodo?: (event: { target: HTMLInputElement }) => void;
-   addTodo: (event: KeyboardEvent) => void;
-   inputRef: any;
-   todo: string;
-}
-
-function Header(props: Props) {
+function Header(props: PropsHeader) {
    const { handleTodo, addTodo, inputRef, todo, ...other } = props;
    return (
       <header className="header">
