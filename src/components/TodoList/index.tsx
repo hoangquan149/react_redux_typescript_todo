@@ -23,27 +23,25 @@ function TodoList(props: PropsTodo) {
          <input
             type={"checkbox"}
             id="toggle-all"
-            onChange={toggleAllTodo}
             className="toggle-all"
+            onChange={(event) => toggleAllTodo(event)}
          />
          <label htmlFor="toggle-all"></label>
          <ul className="todo-list">
-            {todoList
-               .filter(FILTERS[filter])
-               .map((todo: Todo, index: number) => (
-                  <TodoItem
-                     key={index}
-                     todo={todo}
-                     index={index}
-                     deleteTodo={deleteTodo}
-                     toggleTodo={toggleTodo}
-                     editTodo={editTodo}
-                     indexEdit={indexEdit}
-                     updateTodo={updateTodo}
-                     handleEdit={handleEdit}
-                     handleBlur={handleBlur}
-                  />
-               ))}
+            {todoList.filter(FILTERS[filter]).map((todo, index) => (
+               <TodoItem
+                  key={index}
+                  index={index}
+                  todo={todo}
+                  toggleTodo={toggleTodo}
+                  deleteTodo={deleteTodo}
+                  indexEdit={indexEdit}
+                  editTodo={editTodo}
+                  handleEdit={handleEdit}
+                  updateTodo={updateTodo}
+                  handleBlur={handleBlur}
+               />
+            ))}
          </ul>
       </div>
    );

@@ -30,11 +30,11 @@ function Footer(props: PropsFooter) {
    );
 }
 
-Footer.propTypes = {
-   filter: PropTypes.string.isRequired,
-   handleFilter: PropTypes.func.isRequired,
-   clearCompleted: PropTypes.func.isRequired,
-   todoList: PropTypes.array.isRequired,
-};
+// Footer.propTypes = {
+//    filter: PropTypes.string.isRequired,
+//    handleFilter: PropTypes.func.isRequired,
+//    clearCompleted: PropTypes.func.isRequired,
+//    todoList: PropTypes.array.isRequired,
+// };
 
 export default Footer;

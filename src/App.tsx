@@ -7,23 +7,28 @@ import React, {
    FocusEventHandler,
    FocusEvent,
 } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "./stores";
 import Footer from "./components/layouts/Footer";
 import Header from "./components/layouts/Header";
 import TodoList from "./components/TodoList";
 import { Todo } from "./utils/types";
+import { StorageService } from "./services/StorageService";
 import { ENTER_KEY, CANCEL_KEY } from "./utils/constanst";
-import useLocalStorage from "./hooks/useLocalStorage";
+import {
+   addTodo,
+   clearCompleted,
+   deleteTodo,
+   toggleAllTodo,
+   toggleTodo,
+   updateTodo,
+} from "./stores/todo";
+
 import "./App.scss";
 
 function App() {
-   const { save, get } = useLocalStorage();
-
-   const [todo, setTodo] = useState<Todo>({
-      title: "",
-      completed: false,
-   });
-
-   const [todoList, setTodoList] = useState<Array<Todo>>(() => get() || []);
+   const todos = useSelector((state: RootState) => state.todos.todos);
+   const dispatch = useDispatch();
 
    const inputRef = useRef<HTMLInputElement | null>();
 
@@ -33,75 +38,39 @@ function App() {
 
    const [value, setValue] = useState<string>("");
 
-   useEffect(() => {
-      save(todoList);
-   }, [todoList]);
+   const [todo, setTodo] = useState<Todo>({
+      title: "",
+      completed: false,
+   });
 
-   const handleTodo = (event: { target: HTMLInputElement }): void => {
-      const value = event.target.value;
-      const newState = { ...todo, title: value };
+   useEffect(() => {
+      StorageService.save(todos);
+   }, [todos]);
+
+   console.log(todos);
+
+   const handleChangeValueTodo = (event: { target: HTMLInputElement }) => {
+      console.log(event.target.value);
+      const newState = { ...todo, title: event.target.value };
       setTodo(newState);
    };
 
-   const addTodo = (event: KeyboardEvent): void => {
-      const newState = [...todoList];
+   const add = (event: KeyboardEvent) => {
+      if (!todo.title) return;
 
-      if (!todo.title) {
-         return;
-      }
+      if (event.keyCode !== ENTER_KEY) return;
 
-      if (event.keyCode === ENTER_KEY) {
-         newState.unshift(todo);
-         setTodoList(newState);
-         setTodo({ ...todo, title: "" });
-         inputRef.current?.focus();
-      }
+      dispatch(addTodo(todo));
+      setTodo({ ...todo, title: "" });
+      inputRef.current?.focus();
    };
 
-   const deleteTodo = (index: number): void => {
-      const newState = [...todoList];
-      newState.splice(index, 1);
-      setTodoList(newState);
-      setIndexEdit(null);
-   };
-
-   const toggleTodo = (
-      event: ChangeEvent<HTMLInputElement>,
-      index: number
-   ): void => {
-      const newState = [...todoList];
-      const todo = newState[index];
-      console.log(todo);
-      todo.completed = event.target.checked;
-      setTodoList(newState);
-   };
-
-   const toggleAllTodo = (event: ChangeEvent<HTMLInputElement>): void => {
-      const newState = [...todoList].map((todo, index) => {
-         return { ...todo, completed: !event.target.checked };
-      });
-      setTodoList(newState);
+   const delTodo = (id: number) => {
+      dispatch(deleteTodo(id));
    };
 
    const editTodo = (index: number) => {
       setIndexEdit(index);
-   };
-
-   const clearCompleted = (): void => {
-      const newState = [...todoList].filter((todo) => !todo.completed);
-      setTodoList(newState);
-   };
-
-   const handleValueEdit = (
-      event: { target: HTMLInputElement } | null,
-      callback: Function | null
-   ): void => {
-      const value = event.target.value;
-
-      if (typeof callback === "function") {
-         callback(value);
-         setValue(value);
-      }
    };
 
    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -109,36 +78,50 @@ function App() {
          return;
       }
 
-      const newState = [...todoList];
-
-      const todo = newState[Number(indexEdit)];
-
       if (e.type === "blur") {
-         todo.title = value;
-         setTodoList(newState);
+         dispatch(updateTodo({ index: indexEdit, title: value }));
          setIndexEdit(null);
       }
    };
 
-   const updateTodo = (event: KeyboardEvent<HTMLInputElement>): void => {
-      const newState = [...todoList];
+   const handleEdit = (
+      event: { target: HTMLInputElement } | null,
+      callback: Function | null
+   ) => {
+      const value = event.target.value;
+      if (typeof callback !== "function") return;
 
-      const todo = newState[Number(indexEdit)];
+      callback(value);
+      setValue(value);
+   };
 
+   const toggle = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+      dispatch(
+         toggleTodo({
+            index: index,
+         })
+      );
+   };
+
+   const toggleAll = (event: ChangeEvent<HTMLInputElement>) => {
+      dispatch(toggleAllTodo(event.target.checked));
+   };
+
+   const update = (event: KeyboardEvent<HTMLInputElement>) => {
+      const key = event.keyCode;
       if (indexEdit !== null) {
          if (value) {
-            if (event.keyCode === ENTER_KEY) {
-               todo.title = value;
-               setTodoList(newState);
+            if (key === ENTER_KEY) {
+               dispatch(updateTodo({ index: indexEdit, title: value }));
                setIndexEdit(null);
-            } else if (event.keyCode === CANCEL_KEY) {
+            } else if (key === CANCEL_KEY) {
                setIndexEdit(null);
             }
          } else {
-            if (event.keyCode === ENTER_KEY) {
-               deleteTodo(Number(indexEdit));
-            } else if (event.keyCode === CANCEL_KEY) {
-               deleteTodo(Number(indexEdit));
+            if (key === ENTER_KEY) {
+               dispatch(deleteTodo(indexEdit as number));
+            } else if (key === CANCEL_KEY) {
+               dispatch(deleteTodo(indexEdit as number));
             }
          }
       }
@@ -148,35 +131,39 @@ function App() {
       setFilter(filter);
    };
 
+   const clearComplete = () => {
+      dispatch(clearCompleted());
+   };
+
    return (
       <div className="app">
          <Header
-            handleTodo={handleTodo}
-            addTodo={addTodo}
-            todo={todo.title}
+            handleChangeValueTodo={handleChangeValueTodo}
+            addTodo={add}
             inputRef={inputRef}
+            todo={todo.title}
          />
-         {todoList.length > 0 && (
+         {todos.length > 0 && (
             <TodoList
-               todoList={todoList}
-               deleteTodo={deleteTodo}
-               toggleTodo={toggleTodo}
-               toggleAllTodo={toggleAllTodo}
+               todoList={todos}
+               deleteTodo={delTodo}
                editTodo={editTodo}
                indexEdit={indexEdit}
-               updateTodo={updateTodo}
-               handleEdit={handleValueEdit}
+               toggleTodo={toggle}
+               toggleAllTodo={toggleAll}
+               handleEdit={handleEdit}
+               updateTodo={update}
                handleBlur={handleBlur}
                filter={filter}
             />
          )}
 
-         {todoList.length > 0 && (
+         {todos.length > 0 && (
             <Footer
+               todoList={todos}
                filter={filter}
                handleFilter={handleFilter}
-               clearCompleted={clearCompleted}
-               todoList={todoList}
+               clearCompleted={clearComplete}
             />
          )}
       </div>

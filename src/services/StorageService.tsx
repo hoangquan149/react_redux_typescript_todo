@@ -1,7 +1,7 @@
-import { Todo } from "../utils/types";
 const KEY = "todos";
-function useLocalStorage() {
-   const save = (data: any, key?: string) => {
+
+const StorageService = {
+   save(data: any, key?: string) {
       if (localStorage) {
          if (data) {
             const dataJson = JSON.stringify(data);
@@ -10,16 +10,15 @@ function useLocalStorage() {
             } else {
                localStorage.setItem(KEY, dataJson);
             }
+         } else {
+            localStorage.removeItem(KEY);
          }
       }
-   };
-
-   const get = (key: string = KEY) => {
+   },
+   get(key: string = KEY) {
       const dataJson = localStorage?.getItem(key);
       return dataJson !== null ? JSON.parse(dataJson) : [];
-   };
+   },
+};
 
-   return { save, get };
-}
-
-export default useLocalStorage;
+export { StorageService };
